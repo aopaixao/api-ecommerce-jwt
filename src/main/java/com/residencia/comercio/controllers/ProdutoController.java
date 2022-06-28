@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.residencia.comercio.dtos.ProdutoDTO;
 import com.residencia.comercio.entities.Produto;
 import com.residencia.comercio.exceptions.NoSuchElementFoundException;
 import com.residencia.comercio.services.ArquivoService;
@@ -51,13 +52,22 @@ public class ProdutoController {
     		return new ResponseEntity<>(novoProduto, HttpStatus.CREATED);
     }
 	
-	@GetMapping
+	@GetMapping("/entidade")
 	public ResponseEntity<List<Produto>> findAll(){
 		List<Produto> produtoList = produtoService.findAll();
 		if(produtoList.isEmpty())
 			throw new NoSuchElementFoundException("Não foram encontrados Produtos");
 		else
 			return new ResponseEntity<>(produtoService.findAll(), HttpStatus.OK);
+	}
+	
+	@GetMapping
+	public ResponseEntity<List<ProdutoDTO>> findAllDTO(){
+		List<ProdutoDTO> produtoDTOList = produtoService.findAllDTO();
+		if(produtoDTOList.isEmpty())
+			throw new NoSuchElementFoundException("Não foram encontrados Produtos");
+		else
+			return new ResponseEntity<>(produtoDTOList, HttpStatus.OK);
 	}
 	
 	/*

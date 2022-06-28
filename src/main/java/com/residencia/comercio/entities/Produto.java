@@ -1,5 +1,7 @@
 package com.residencia.comercio.entities;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,6 +35,12 @@ public class Produto {
 	@Column(name = "imagem_produto")
 	private String imagemProduto;
 
+	@Column(name = "preco_produto")
+	private BigDecimal precoProduto;
+
+	@Column(name = "descricao_produto")
+	private String descricaoProduto;
+
 	@ManyToOne
 	@JoinColumn(name = "id_fornecedor", referencedColumnName = "id_fornecedor")
 	private Fornecedor fornecedor;
@@ -40,11 +48,10 @@ public class Produto {
 	@ManyToOne
 	@JoinColumn(name = "id_categoria", referencedColumnName = "id_categoria")
 	private Categoria categoria;
-	
+
 	/*
-	@OneToOne(mappedBy="produto")
-	private Estoque estoque;
-	*/
+	 * @OneToOne(mappedBy="produto") private Estoque estoque;
+	 */
 
 	public Integer getIdProduto() {
 		return idProduto;
@@ -76,6 +83,22 @@ public class Produto {
 
 	public void setImagemProduto(String imagemProduto) {
 		this.imagemProduto = imagemProduto;
+	}
+
+	public BigDecimal getPrecoProduto() {
+		return precoProduto;
+	}
+
+	public void setPrecoProduto(BigDecimal precoProduto) {
+		this.precoProduto = precoProduto;
+	}
+
+	public String getDescricaoProduto() {
+		return descricaoProduto;
+	}
+
+	public void setDescricaoProduto(String descricaoProduto) {
+		this.descricaoProduto = descricaoProduto;
 	}
 
 	public Fornecedor getFornecedor() {

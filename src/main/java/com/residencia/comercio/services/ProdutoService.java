@@ -1,7 +1,9 @@
 package com.residencia.comercio.services;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.residencia.comercio.dtos.CategoriaDTO;
+import com.residencia.comercio.dtos.ProdutoDTO;
+import com.residencia.comercio.entities.Categoria;
 import com.residencia.comercio.entities.Produto;
 import com.residencia.comercio.repositories.ProdutoRepository;
 
@@ -23,6 +28,15 @@ public class ProdutoService {
 	
 	public List<Produto> findAll(){
 		return produtoRepository.findAll();
+	}
+	
+	public List<ProdutoDTO> findAllDTO(){
+		List<Produto> listProduto = produtoRepository.findAll();
+		return listProduto.stream()
+		        .map(entity -> new ProdutoDTO(entity.getIdProduto(), entity.getSku(), entity.getNomeProduto(), entity.getDescricaoProduto(), entity.getImagemProduto(),
+		        		entity.getPrecoProduto(), null != entity.getFornecedor() ? entity.getFornecedor().getRazaoSocial() : null, 
+		        				null != entity.getCategoria() ? entity.getCategoria().getNomeCategoria() : null))
+		        .collect(Collectors.toList());
 	}
 	
 	public Produto findById(Integer id) {
