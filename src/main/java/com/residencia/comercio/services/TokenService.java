@@ -30,6 +30,21 @@ public class TokenService {
 				.setIssuedAt(new Date())
 				.signWith(SignatureAlgorithm.HS256, jwtSecret)
 				.compact();
+		
+		return tokenJwt;
+	}
+	
+	public String generateTokenWithUserData(Usuario usuario) {
+		String tokenJwt = 
+				Jwts.builder().setIssuer("IRS")
+				.setIssuer("ComercioSeguro")
+				.setSubject("Usuario")
+				.claim("id", usuario.getIdUsuario())
+				.claim("name", usuario.getNomeUsuario())
+				.claim("email", usuario.getEmail())
+				.setIssuedAt(new Date())
+				.signWith(SignatureAlgorithm.HS256, jwtSecret)
+				.compact();
 				
 		return tokenJwt;
 	}
