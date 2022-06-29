@@ -22,88 +22,95 @@ import com.residencia.comercio.repositories.ProdutoRepository;
 public class ProdutoService {
 	@Autowired
 	ProdutoRepository produtoRepository;
-	
+
 	@Autowired
 	ArquivoService arquivoService;
-	
-	public List<Produto> findAll(){
+
+	public List<Produto> findAll() {
 		return produtoRepository.findAll();
 	}
-	
-	public List<ProdutoDTO> findAllDTO(){
+
+	public List<ProdutoDTO> findAllDTO() {
 		List<Produto> listProduto = produtoRepository.findAll();
 		return listProduto.stream()
-		        .map(entity -> new ProdutoDTO(entity.getIdProduto(), entity.getSku(), entity.getNomeProduto(), entity.getDescricaoProduto(), entity.getImagemProduto(),
-		        		entity.getPrecoProduto(), null != entity.getFornecedor() ? entity.getFornecedor().getRazaoSocial() : null, 
-		        				null != entity.getCategoria() ? entity.getCategoria().getNomeCategoria() : null))
-		        .collect(Collectors.toList());
+				.map(entity -> new ProdutoDTO(
+						entity.getIdProduto(), 
+						entity.getSku(), 
+						entity.getNomeProduto(),
+						entity.getDescricaoProduto(), 
+						entity.getImagemProduto(),
+						entity.getPrecoProduto(),
+						entity.getFornecedor().getRazaoSocial(),
+						entity.getFornecedor().getIdFornecedor(),
+						entity.getCategoria().getNomeCategoria(),
+						entity.getCategoria().getIdCategoria()))
+				.collect(Collectors.toList());
 	}
-	
+
 	public Produto findById(Integer id) {
-		return produtoRepository.findById(id).isPresent() ?
-				produtoRepository.findById(id).get() : null;
+		return produtoRepository.findById(id).isPresent() ? produtoRepository.findById(id).get() : null;
 	}
-	
+
 	public Produto save(Produto produto) {
 		return produtoRepository.save(produto);
 	}
-	
+
 	public Produto update(Produto produto) {
 		return produtoRepository.save(produto);
 	}
 
 	public Produto updateComId(Produto produto, Integer id) {
-		Produto produtoBD = produtoRepository.findById(id).isPresent() ?
-				produtoRepository.findById(id).get() : null;
-		
+		Produto produtoBD = produtoRepository.findById(id).isPresent() ? produtoRepository.findById(id).get() : null;
+
 		Produto produtoAtualizado = null;
-		if(null != produtoBD) {
+		if (null != produtoBD) {
 			produtoBD.setCategoria(produto.getCategoria());
-			//...
+			// ...
 			produtoAtualizado = produtoRepository.save(produtoBD);
 		}
 		return produtoAtualizado;
 	}
-	
+
 	public void delete(Produto produto) {
 		produtoRepository.delete(produto);
 	}
-	
+
 	public void deletePorId(Integer id) {
 		produtoRepository.deleteById(id);
 	}
-	
+
 	public Produto saveProdutoComFoto(@RequestPart("produto") String produto, @RequestPart("file") MultipartFile file) {
 		Produto produtoFromJson = convertProdutoFromStringJson(produto);
 		Produto novoProduto = produtoRepository.save(produtoFromJson);
-		
-		// Limpeza no nome do arquivo
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
-        //Concatena o id do produto ao nome do arquivo
-        fileName = novoProduto.getIdProduto().toString() + "_" + fileName;
-        
-        //Seta no produto recem criado o nome da imagem
-        novoProduto.setImagemProduto(fileName);
-        
-        //Armazena a foto no diretorio
-        arquivoService.storeFile(file, fileName);
-        
-        //Atualiza o produto recem criado, agora com o nome da imagem
-        return produtoRepository.save(novoProduto);
+		// Limpeza no nome do arquivo
+		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+
+		// Concatena o id do produto ao nome do arquivo
+		fileName = novoProduto.getIdProduto().toString() + "_" + fileName;
+
+		// Seta no produto recem criado o nome da imagem
+		novoProduto.setImagemProduto(fileName);
+
+		// Armazena a foto no diretorio
+		arquivoService.storeFile(file, fileName);
+
+		// Atualiza o produto recem criado, agora com o nome da imagem
+		return produtoRepository.save(novoProduto);
 	}
-	
+
 	private Produto convertProdutoFromStringJson(String produtoJson) {
 		Produto produto = new Produto();
-		
+
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
 			produto = objectMapper.readValue(produtoJson, Produto.class);
 		} catch (IOException err) {
-			System.out.printf("Ocorreu um erro ao tentar converter a string json para um instância da entidade Produto", err.toString());
+			System.out.printf("Ocorreu um erro ao tentar converter a string json para um instância da entidade Produto",
+					err.toString());
 		}
-		
+
 		return produto;
 	}
-	
+
 }
