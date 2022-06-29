@@ -95,5 +95,10 @@ public class CategoriaController {
 		categoriaService.deleteCategoria(id);
 		return new ResponseEntity<>("", HttpStatus.OK);
 	}
+	
+	@GetMapping("/count")
+	public Long count() {
+		return categoriaService.count();
+	}
 
 }

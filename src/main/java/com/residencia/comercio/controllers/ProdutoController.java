@@ -135,4 +135,9 @@ public class ProdutoController {
 		return new ResponseEntity<>("", HttpStatus.OK);
 	}
 	
+	@GetMapping("/count")
+	public Long count() {
+		return produtoService.count();
+	}
+	
 }
