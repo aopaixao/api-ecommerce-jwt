@@ -62,30 +62,13 @@ public class ProdutoController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<ProdutoDTO>> findAllDTO(){
-		List<ProdutoDTO> produtoDTOList = produtoService.findAllDTO();
+	public ResponseEntity<List<ProdutoDTO>> findAllDTO(@RequestParam(required = false) Integer pagina, @RequestParam(required = false) Integer qtdRegistros){
+		List<ProdutoDTO> produtoDTOList = produtoService.findAllDTO(pagina, qtdRegistros);
 		if(produtoDTOList.isEmpty())
 			throw new NoSuchElementFoundException("Não foram encontrados Produtos");
 		else
 			return new ResponseEntity<>(produtoDTOList, HttpStatus.OK);
 	}
-	
-	/*
-	@GetMapping("/cnpj/query")
-	public ResponseEntity<CadastroEmpresaReceitaDTO> queryConsultarDadosPorCnpj(
-			@RequestParam 
-			@NotBlank 
-			@Pattern(regexp="^[0-9]{14}", message="O CNPJ deve conter apenas números, com 14 dígitos.") 
-			String cnpj) 
-			{
-				
-		CadastroEmpresaReceitaDTO cadEmpresaDTO = fornecedorService.consultarDadosPorCnpj(cnpj);
-		if(null == cadEmpresaDTO)
-			throw new NoSuchElementFoundException("Não foram encontrados dados para o CNPJ informado");
-		else
-			return new ResponseEntity<>(cadEmpresaDTO, HttpStatus.OK);
-	}	
-	*/
 	
 	@GetMapping("/query")
 	public ResponseEntity<Produto> findByIdQuery(
@@ -150,6 +133,11 @@ public class ProdutoController {
 	public ResponseEntity<String> deletePorId(Integer id){
 		produtoService.deletePorId(id);
 		return new ResponseEntity<>("", HttpStatus.OK);
+	}
+	
+	@GetMapping("/count")
+	public Long count() {
+		return produtoService.count();
 	}
 	
 }

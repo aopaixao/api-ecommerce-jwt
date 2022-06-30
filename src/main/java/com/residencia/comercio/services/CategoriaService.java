@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,8 +32,17 @@ public class CategoriaService {
 		return categoriaRepository.findAll();
 	}
 	
-	public List<CategoriaDTO> findAllCategoriaDTO(){
-		List<Categoria> categoriaList = categoriaRepository.findAll();
+	public List<CategoriaDTO> findAllCategoriaDTO(Integer pagina, Integer qtdRegistros){
+		List<Categoria> categoriaList = new ArrayList<>();
+		
+		if(null != pagina && null != qtdRegistros) {
+			Pageable page = PageRequest.of(pagina, qtdRegistros);
+			Page<Categoria> categoriaPageable = categoriaRepository.findAll(page); 
+			categoriaList = categoriaPageable.getContent();
+		}else {
+			categoriaList = categoriaRepository.findAll();
+		}
+
 		return categoriaList.stream()
 		        .map(entity -> new CategoriaDTO(entity.getIdCategoria(), entity.getNomeCategoria(), entity.getNomeImagem()))
 		        .collect(Collectors.toList());
@@ -126,5 +138,9 @@ public class CategoriaService {
 
 		
 		return categoriaAtualizada;
+	}
+	
+	public Long count() {
+		return categoriaRepository.count();
 	}
 }

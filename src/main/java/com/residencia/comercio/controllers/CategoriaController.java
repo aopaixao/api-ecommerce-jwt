@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,8 +34,8 @@ public class CategoriaController {
 	CategoriaService categoriaService;
 
 	@GetMapping
-	public ResponseEntity<List<CategoriaDTO>> findAllCategoria() {
-		List<CategoriaDTO> categoriaList = categoriaService.findAllCategoriaDTO();
+	public ResponseEntity<List<CategoriaDTO>> findAllCategoria(@RequestParam(required = false) Integer pagina, @RequestParam(required = false) Integer qtdRegistros) {
+		List<CategoriaDTO> categoriaList = categoriaService.findAllCategoriaDTO(pagina, qtdRegistros);
 		return new ResponseEntity<>(categoriaList, HttpStatus.OK);
 	}
 
@@ -93,6 +94,11 @@ public class CategoriaController {
 		
 		categoriaService.deleteCategoria(id);
 		return new ResponseEntity<>("", HttpStatus.OK);
+	}
+	
+	@GetMapping("/count")
+	public Long count() {
+		return categoriaService.count();
 	}
 
 }

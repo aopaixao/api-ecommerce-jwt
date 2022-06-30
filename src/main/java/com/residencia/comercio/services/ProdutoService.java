@@ -1,20 +1,21 @@
 package com.residencia.comercio.services;
 
 import java.io.IOException;
-import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.residencia.comercio.dtos.CategoriaDTO;
 import com.residencia.comercio.dtos.ProdutoDTO;
-import com.residencia.comercio.entities.Categoria;
 import com.residencia.comercio.entities.Produto;
 import com.residencia.comercio.repositories.ProdutoRepository;
 
@@ -29,9 +30,18 @@ public class ProdutoService {
 	public List<Produto> findAll() {
 		return produtoRepository.findAll();
 	}
+	
+	public List<ProdutoDTO> findAllDTO(Integer pagina, Integer qtdRegistros){
+		List<Produto> listProduto = new ArrayList<>();
 
-	public List<ProdutoDTO> findAllDTO() {
-		List<Produto> listProduto = produtoRepository.findAll();
+		if(null != pagina && null != qtdRegistros) { 
+			Pageable page = PageRequest.of(pagina, qtdRegistros);
+			Page<Produto> produtoPageable = produtoRepository.findAll(page);
+			listProduto = produtoPageable.getContent();
+		}else {
+			listProduto = produtoRepository.findAll();
+		}
+
 		return listProduto.stream()
 				.map(entity -> new ProdutoDTO(
 						entity.getIdProduto(), 
@@ -112,5 +122,8 @@ public class ProdutoService {
 
 		return produto;
 	}
-
+	
+	public Long count() {
+		return produtoRepository.count();
+	}
 }
