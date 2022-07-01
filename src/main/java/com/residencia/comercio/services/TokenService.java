@@ -27,6 +27,7 @@ public class TokenService {
 				.claim("id", usuario.getIdUsuario())
 				.claim("name", usuario.getNomeUsuario())
 				.claim("email", usuario.getEmail())
+				.claim("foto_perfil", usuario.getFotoPerfil())
 				.setIssuedAt(new Date())
 				.signWith(SignatureAlgorithm.HS256, jwtSecret)
 				.compact();
@@ -42,6 +43,7 @@ public class TokenService {
 				.claim("id", usuario.getIdUsuario())
 				.claim("name", usuario.getNomeUsuario())
 				.claim("email", usuario.getEmail())
+				.claim("foto_perfil", usuario.getFotoPerfil())
 				.setIssuedAt(new Date())
 				.signWith(SignatureAlgorithm.HS256, jwtSecret)
 				.compact();

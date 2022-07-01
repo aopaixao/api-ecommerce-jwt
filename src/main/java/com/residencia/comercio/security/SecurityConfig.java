@@ -32,7 +32,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception{
 		http.authorizeRequests()
-			.antMatchers("/autenticacao", "/autenticacao/registro", "/autenticacao/recuperar-senha").permitAll()
+			.antMatchers("/autenticacao", 
+					"/autenticacao/registro", 
+					"/autenticacao/recuperar-senha",
+					"/swagger-ui/**",
+					"/v3/api-docs/**"
+			).permitAll()
 			.anyRequest().authenticated()
 			.and().csrf().disable()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

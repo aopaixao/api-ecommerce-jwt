@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.residencia.comercio.dtos.ProdutoDTO;
+import com.residencia.comercio.dtos.ProdutoInterfaceDTO;
 import com.residencia.comercio.entities.Produto;
 import com.residencia.comercio.repositories.ProdutoRepository;
 
@@ -47,6 +48,10 @@ public class ProdutoService {
 		        		entity.getPrecoProduto(), null != entity.getFornecedor() ? entity.getFornecedor().getRazaoSocial() : null, 
 		        				null != entity.getCategoria() ? entity.getCategoria().getNomeCategoria() : null))
 		        .collect(Collectors.toList());
+	}
+	
+	public List<ProdutoInterfaceDTO> buscaDTO(String keyword){
+		return produtoRepository.busca(keyword);
 	}
 	
 	public Produto findById(Integer id) {

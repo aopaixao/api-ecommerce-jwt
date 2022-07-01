@@ -35,13 +35,15 @@ public class Usuario implements UserDetails {
 	@Column(name = "email")
 	private String email;
 
+	@Column(name = "foto_perfil")
+	private String fotoPerfil;
+
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@Column(name = "senha")
 	private String senha;
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name="usuario_rel_perfil", joinColumns = @JoinColumn(name="id_usuario"),
-			inverseJoinColumns = @JoinColumn(name="id_perfil"))
+	@JoinTable(name = "usuario_rel_perfil", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_perfil"))
 	private List<Perfil> perfis;
 
 	public Integer getIdUsuario() {
@@ -66,6 +68,14 @@ public class Usuario implements UserDetails {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getFotoPerfil() {
+		return fotoPerfil;
+	}
+
+	public void setFotoPerfil(String fotoPerfil) {
+		this.fotoPerfil = fotoPerfil;
 	}
 
 	public String getSenha() {
