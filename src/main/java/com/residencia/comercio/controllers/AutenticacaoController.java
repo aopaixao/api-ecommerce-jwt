@@ -53,10 +53,9 @@ public class AutenticacaoController {
 		return new ResponseEntity<>(tokenDTO, HttpStatus.OK);
 	}
 	
-	@PostMapping(value = "/registro", consumes = { MediaType.APPLICATION_JSON_VALUE,
-			 MediaType.MULTIPART_FORM_DATA_VALUE })
-	public ResponseEntity<TokenDTO> registrar(@RequestPart("usuario") String usuario, @RequestPart("file") MultipartFile file){
-		Usuario novoUsuario = usuarioService.save(usuario, file);
+	@PostMapping(value = "/registro")
+	public ResponseEntity<TokenDTO> registrar(@RequestBody Usuario usuario){
+		Usuario novoUsuario = usuarioService.save(usuario);
 		
 		String token = tokenService.generateTokenWithUserData(novoUsuario);
 		TokenDTO tokenDTO = new TokenDTO("Bearer", token);
